@@ -70,15 +70,54 @@ def list_tasks(completed):
 
 
 def remove_task():
-    pass
+    if not list_tasks(completed=False):
+        print("The task list is empty, nothing to remove.\n")
+        return
+    data = load_data()
+    try:
+        task_index = int(input("Please enter task number to remove: "))
+        if 1 <= task_index <= len(data["tasks"]):
+            removed = data["tasks"].pop(task_index - 1)
+            save_data(data)
+            print(f"Removed {removed}\n")
+        else:
+            task_len = len(data["tasks"])
+            print("Invalid task index")
+            print(f"Please select between {1} to {task_len}")
+    except ValueError:
+        print("Please enter a valid number.")
 
 
 def mark_task():
-    pass
+    if not list_tasks(completed=False):
+        print("The task list is empty, nothing to remove")
+        return
+    data = load_data()
+    try:
+        task_index = int(input("Please enter task number to mark complete: "))
+        if 1 <= task_index <= len(data["tasks"]):
+            finished = data["tasks"].pop(task_index - 1)
+            data["done"].append(finished)
+            save_data(data)
+            print(f"Completed task: {finished}\n")
+        else:
+            task_len = len(data["tasks"])
+            print("Invalid task index.")
+            print(f"Please select between {1} to {task_len}\n")
+    except ValueError:
+        print("Please enter a valid number.\n")
 
 
 def reset_task():
-    pass
+    confirm = input("Are you sure you want to clear all tasks? (y/n): ").strip().lower()
+    if confirm == 'y':
+        data = load_data()
+        data["tasks"] = []
+        data["done"] = []
+        save_data(data)
+        print("Everything has been cleared.\n")
+    else:
+        print("Canceled.\n")
 
 
 if __name__ == "__main__":
